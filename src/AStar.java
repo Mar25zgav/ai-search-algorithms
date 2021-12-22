@@ -3,7 +3,7 @@ import java.util.LinkedList;
 
 public class AStar {
 
-    public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int[] hCost) {
+    private static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int[] hCost) {
         LinkedList<Integer> open = new LinkedList<>();
         boolean[] closed = new boolean[graph.length];
         int[] from = new int[graph.length];
@@ -75,7 +75,7 @@ public class AStar {
         }
     }
 
-    public static void main(String[] args) {
+    public static void visualize(int[][] graph1) {
         int[][] graph = {
                 {0, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0},

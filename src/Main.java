@@ -1,7 +1,9 @@
 public class Main {
 
     public static void main(String[] args) {
-        // write your code here    }
+
+        String labyrinth = "labyrinth_1.txt";
+        LabyrinthDrawer lb = new LabyrinthDrawer(labyrinth);
     }
 
 }

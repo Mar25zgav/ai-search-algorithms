@@ -8,7 +8,6 @@ public class BFS {
         boolean[] marked = new boolean[graph.length];
         int[] from = new int[graph.length];
 
-
         Queue<Integer> queue = new LinkedList<>();
 
         marked[startNode] = true;
@@ -46,6 +45,10 @@ public class BFS {
                 }
             }
         }
+    }
+
+    public static void vizualize(String filename) {
+
     }
 
     public static void main(String[] args) {
