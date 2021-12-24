@@ -4,6 +4,7 @@ public class Main {
 
         String labyrinth = "labyrinth_1.txt";
         LabyrinthDrawer lb = new LabyrinthDrawer(labyrinth);
+        lb.draw();
     }
 
 }

@@ -1,15 +1,61 @@
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
 public class LabyrinthDrawer {
 
-    private final int WIDTH = 1280;
-    private final int HEIGHT = 720;
+    private final int WIDTH = 600;
+    private final int HEIGHT = 600;
     private int[][] labyrinth;
 
     public LabyrinthDrawer(String filename) {
         labyrinth = read(filename);
+
+        StdDraw.setCanvasSize(WIDTH, HEIGHT);
+        StdDraw.setXscale(0, labyrinth.length);
+        StdDraw.setYscale(labyrinth.length, 0);
+        StdDraw.enableDoubleBuffering();
+    }
+
+    public void draw() {
+        StdDraw.clear();
+
+        // Draw labyrinth
+        for (int y = 0; y < labyrinth.length; y++) {
+            for (int x = 0; x < labyrinth.length; x++) {
+                StdDraw.setPenColor(getColor(labyrinth[x][y]));
+                StdDraw.filledSquare(y + 0.5, x + 0.5, 0.5);
+            }
+        }
+
+        // Draw grid
+        StdDraw.setPenColor(Color.LIGHT_GRAY);
+        for (int x = 1; x < labyrinth.length; x++) {
+            StdDraw.line(x, 0, x, labyrinth.length);
+            StdDraw.line(0, x, labyrinth.length, x);
+        }
+
+        StdDraw.show();
+    }
+
+    private Color getColor(int x) {
+        switch (x) {
+            case -1:
+                // wall
+                return StdDraw.GRAY;
+            case -2:
+                // starting point
+                return StdDraw.GREEN;
+            case -3:
+                // treasue
+                return StdDraw.YELLOW;
+            case -4:
+                // target point
+                return StdDraw.RED;
+        }
+        // hallway
+        return StdDraw.WHITE;
     }
 
     private int[][] read(String filename) {
