@@ -47,10 +47,6 @@ public class BFS {
         }
     }
 
-    public static void vizualize(String filename) {
-
-    }
-
     public static void main(String[] args) {
         int[][] graph = {
                 {0, 1, 0, 0, 0, 0, 0, 0},

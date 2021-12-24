@@ -7,7 +7,6 @@ public class DFS {
         boolean[] marked = new boolean[graph.length];
         int[] from = new int[graph.length];
 
-
         Stack<Integer> stack = new Stack<>();
 
         from[startNode] = -1;

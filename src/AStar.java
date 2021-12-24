@@ -75,7 +75,7 @@ public class AStar {
         }
     }
 
-    public static void visualize(int[][] graph1) {
+    public static void main(int[][] graph1) {
         int[][] graph = {
                 {0, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0},

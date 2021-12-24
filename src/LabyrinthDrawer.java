@@ -8,6 +8,7 @@ public class LabyrinthDrawer {
     private final int WIDTH = 600;
     private final int HEIGHT = 600;
     private int[][] labyrinth;
+    private boolean drawCost = false;
 
     public LabyrinthDrawer(String filename) {
         labyrinth = read(filename);
@@ -18,7 +19,17 @@ public class LabyrinthDrawer {
         StdDraw.enableDoubleBuffering();
     }
 
-    public void draw() {
+    public void DFS() {
+        drawCost = false;
+        draw();
+    }
+
+    public void AStar() {
+        drawCost = true;
+        draw();
+    }
+
+    private void draw() {
         StdDraw.clear();
 
         // Draw labyrinth
@@ -26,6 +37,12 @@ public class LabyrinthDrawer {
             for (int x = 0; x < labyrinth.length; x++) {
                 StdDraw.setPenColor(getColor(labyrinth[x][y]));
                 StdDraw.filledSquare(y + 0.5, x + 0.5, 0.5);
+
+                if (drawCost) {
+                    StdDraw.setPenColor(Color.BLACK);
+                    if (labyrinth[x][y] > 0)
+                        StdDraw.text(y + 0.5, x + 0.5, String.valueOf(labyrinth[x][y]));
+                }
             }
         }
 
