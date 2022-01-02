@@ -10,7 +10,7 @@ public class Main {
         lb.speed = 50;
 
         lb.DFS();
-
+        //lb.AStar();
     }
 
 }
