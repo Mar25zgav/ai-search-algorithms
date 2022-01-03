@@ -32,7 +32,7 @@ public class LabyrinthDrawer {
     }
 
     public void DFS() {
-        DFS.search(convertToGraph(labyrinth), startNode, endNodes);
+        DFS.search(convertToGraph(labyrinth), startNode, endNodes, finalNode);
     }
 
     private int[][] convertToGraph(int[][] labyrinth) {

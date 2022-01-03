@@ -4,17 +4,20 @@ import java.util.Stack;
 
 public class DFS {
 
-    public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes) {
+    public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int fn) {
         boolean[] marked = new boolean[graph.length];
         int[] from = new int[graph.length];
         int numberOfTreasures = endNodes.size();
         int treasuredFound = 0;
 
         Stack<Integer> stack = new Stack<>();
+        Stack<Integer> pathToExit = new Stack<>();
 
         from[startNode] = -1;
         marked[startNode] = true;
         stack.push(startNode);
+
+        boolean naselExit = false;
 
         //System.out.println("Polagam na sklad vozlisce " + startNode);
 
@@ -24,6 +27,11 @@ public class DFS {
             draw(marked, curNode);
 
             if (endNodes.contains(curNode)) {
+
+                if (curNode == fn) {
+                    naselExit = true;
+                }
+
                 int nodeFound = curNode;
                 endNodes.remove((Integer) curNode);
 
@@ -41,11 +49,19 @@ public class DFS {
                 // If found all endNodes end else continue
                 if (endNodes.size() != 0) {
                     from[nodeFound] = -1;
-                    marked[nodeFound] = true;
+                    marked[nodeFound] = true; // pobarvaj ga
                     stack.push(nodeFound);
                     curNode = stack.peek();
-                } else
+                } else {
+                    // go to Exit,
+                    // DRAW path to exit
+                    System.out.println("\n Pot do izhoda: \n" + pathToExit.toString() + "\n");
+                    while (!pathToExit.isEmpty()) {
+                        curNode = pathToExit.pop();
+                        draw(marked, curNode);
+                    }
                     return;
+                }
             }
 
             // najdi neobiskanega naslednjika
@@ -55,15 +71,17 @@ public class DFS {
                         graph[curNode][nextNode] == -2 ||
                         graph[curNode][nextNode] == -3 ||
                         graph[curNode][nextNode] == -4) && !marked[nextNode]) {
-                    marked[nextNode] = true;
+                    marked[nextNode] = true; // pobarvaj ga
                     from[nextNode] = curNode;
                     stack.push(nextNode);
-
                     //System.out.println("Polagam na sklad vozlisce " + nextNode);
-
                     found = true;
+
                     break;
                 }
+            }
+            if (naselExit) {
+                pathToExit.push(curNode);
             }
 
             if (!found) {
