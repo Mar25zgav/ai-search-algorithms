@@ -9,7 +9,7 @@ public class Main {
         // Less = faster, default = 100ms
         lb.speed = 50;
 
-        lb.DFS();
+        lb.BFS();
         //lb.AStar();
     }
 

@@ -35,6 +35,12 @@ public class LabyrinthDrawer {
         DFS.search(convertToGraph(labyrinth), startNode, endNodes, finalNode);
     }
 
+    public void BFS() {
+        BFS.search(convertToGraph(labyrinth), startNode, endNodes, finalNode);
+        System.out.println(BFS.pot.toString());
+        BFS.drawPath(convertToGraph(labyrinth).length);
+    }
+
     private int[][] convertToGraph(int[][] labyrinth) {
         int n = labyrinth.length;
         int[][] graph = new int[n * n][n * n];
