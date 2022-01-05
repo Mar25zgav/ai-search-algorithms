@@ -29,16 +29,25 @@ public class LabyrinthDrawer {
 
     public void AStar() {
         AStar.search(convertToGraph(labyrinth), startNode, endNodes, getCosts(labyrinth));
+        AStar.drawPath(convertToGraph(labyrinth).length);
+        initializeNodes();
+        AStar.printStats(endNodes);
     }
 
     public void DFS() {
         DFS.search(convertToGraph(labyrinth), startNode, endNodes, finalNode);
+        DFS.printStats();
     }
 
     public void BFS() {
         BFS.search(convertToGraph(labyrinth), startNode, endNodes, finalNode);
-        System.out.println(BFS.pot.toString());
         BFS.drawPath(convertToGraph(labyrinth).length);
+        BFS.printStats();
+    }
+
+    public void IDDFS() {
+        IDDFS.search(convertToGraph(labyrinth), startNode, endNodes, finalNode);
+        IDDFS.printStats();
     }
 
     private int[][] convertToGraph(int[][] labyrinth) {

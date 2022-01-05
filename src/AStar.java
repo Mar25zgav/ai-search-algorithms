@@ -4,13 +4,16 @@ import java.util.LinkedList;
 
 public class AStar {
 
+    public static StringBuffer pot = new StringBuffer();
+    private static int[] fScore;
+
     public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int[] hCost) {
         LinkedList<Integer> open = new LinkedList<>();
         boolean[] closed = new boolean[graph.length];
         int[] from = new int[graph.length];
 
         int[] gScore = new int[graph.length];
-        int[] fScore = new int[graph.length];
+        fScore = new int[graph.length];
 
         for (int i = 0; i < gScore.length; i++) {
             gScore[i] = Integer.MAX_VALUE;
@@ -22,7 +25,7 @@ public class AStar {
         from[startNode] = -1;
 
         open.add(startNode);
-        System.out.println("Odpiram vozlisce " + startNode);
+        //System.out.println("Odpiram vozlisce " + startNode);
 
         while (!open.isEmpty()) {
             int minVal = Integer.MAX_VALUE;
@@ -45,26 +48,34 @@ public class AStar {
             //System.out.println("Zapiram vozlisce " + curNode);
 
             if (endNodes.contains(curNode)) {
-                System.out.println("\nResitev A* v vozliscu " + curNode);
-                System.out.print("Pot: " + curNode);
+                //System.out.println("\nResitev A* v vozliscu " + curNode);
+                //System.out.print("Pot: " + curNode);
 
                 endNodes.remove((Integer) curNode);
 
+                StringBuffer sb = new StringBuffer();
+                sb.append(" <-- " + curNode);
+
                 while (true) {
                     curNode = from[curNode];
-                    if (curNode != -1)
-                        System.out.print(" <-- " + curNode);
-                    else
+                    if (curNode != -1) {
+                        //System.out.print(" <-- " + curNode);
+                        if (pot.indexOf(curNode + "") == -1) sb.append(" <-- " + curNode);
+                    } else
                         break;
                 }
+                pot.insert(0, sb);
 
                 if (endNodes.size() > 0) continue;
+
+                draw(closed, curNode);
 
                 return;
             }
 
             for (int nextNode = 0; nextNode < graph[curNode].length; nextNode++) {
-                if (graph[curNode][nextNode] > 0 && !closed[nextNode]) {
+                if ((graph[curNode][nextNode] > 0) && !closed[nextNode]) {
+
                     if (!open.contains(nextNode))
                         //System.out.println("Odpiram vozlisce " + nextNode);
 
@@ -132,4 +143,37 @@ public class AStar {
         StdDraw.show();
         StdDraw.pause(LabyrinthDrawer.speed);
     }
+
+    public static void drawPath(int graphLen) {
+        String[] arr = pot.substring(5).split(" <-- ");
+        boolean[] marked = new boolean[graphLen];
+        for (int i = 0; i < arr.length; i++) {
+            int num = Integer.parseInt(arr[i]);
+            marked[num] = true;
+            draw(marked, num);
+        }
+    }
+
+    public static void printStats(ArrayList<Integer> endnodes) {
+        String[] arr = pot.substring(5).split(" <-- ");
+        System.out.println("Pot do cilja:");
+        for (int i = arr.length - 1; i >= 0; i--) {
+            int node = Integer.parseInt(arr[i]);
+            System.out.print(getPosition(node) + " ");
+        }
+
+        int cost = 0;
+        for (Integer endnode : endnodes)
+            cost += fScore[endnode] - 1;
+
+        System.out.println("\nŠtevilo premikov na najdeni poti: " + arr.length);
+        System.out.println("Cena najdene poti: " + cost);
+    }
+
+    private static String getPosition(int curNode) {
+        int curY = curNode % LabyrinthDrawer.labyrinth.length;
+        int curX = curNode / LabyrinthDrawer.labyrinth.length;
+        return "(" + curX + ", " + curY + ")";
+    }
+
 }

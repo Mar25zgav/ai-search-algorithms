@@ -2,12 +2,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.lang.StringBuffer;
 
 public class BFS {
 
     public static StringBuffer pot = new StringBuffer();
-
 
     public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int fn) {
         boolean[] marked = new boolean[graph.length];
@@ -122,5 +120,21 @@ public class BFS {
             marked[num] = true;
             draw(marked, num);
         }
+    }
+
+    public static void printStats() {
+        String[] arr = pot.toString().split(" <-- ");
+        System.out.println("Pot do cilja:");
+        for (int i = arr.length - 1; i >= 0; i--) {
+            System.out.print(getPosition(Integer.parseInt(arr[i])) + " ");
+        }
+
+        System.out.println("\nŠtevilo premikov na najdeni poti: " + arr.length);
+    }
+
+    private static String getPosition(int curNode) {
+        int curY = curNode % LabyrinthDrawer.labyrinth.length;
+        int curX = curNode / LabyrinthDrawer.labyrinth.length;
+        return "(" + curX + ", " + curY + ")";
     }
 }

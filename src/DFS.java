@@ -1,17 +1,18 @@
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Stack;
+import java.util.*;
 
 public class DFS {
+
+    private static int maxDepth;
 
     public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int fn) {
         boolean[] marked = new boolean[graph.length];
         int[] from = new int[graph.length];
-        int numberOfTreasures = endNodes.size();
-        int treasuredFound = 0;
 
         Stack<Integer> stack = new Stack<>();
         Stack<Integer> pathToExit = new Stack<>();
+        Map<Integer, Integer> moves = new HashMap<>();
+        Set<Integer> path = new HashSet<>();
 
         from[startNode] = -1;
         marked[startNode] = true;
@@ -27,39 +28,65 @@ public class DFS {
             draw(marked, curNode);
 
             if (endNodes.contains(curNode)) {
+                int nodeFound = curNode;
 
                 if (curNode == fn) {
                     naselExit = true;
                 }
 
-                int nodeFound = curNode;
                 endNodes.remove((Integer) curNode);
 
-                System.out.println("\nResitev DFS v vozliscu " + curNode);
-                System.out.print("Pot: " + curNode);
+                //System.out.println("\nResitev DFS v vozliscu " + curNode);
+                System.out.print("\nPot: " + curNode);
+                path.add(curNode);
+                int depth = 0;
 
                 while (true) {
                     curNode = from[curNode];
-                    if (curNode != -1)
+                    if (curNode != -1) {
                         System.out.print(" <-- " + curNode);
-                    else
+                        path.add(curNode);
+                        depth++;
+                    } else {
                         break;
+                    }
+
+                    if (depth > maxDepth) maxDepth = depth;
                 }
 
                 // If found all endNodes end else continue
                 if (endNodes.size() != 0) {
-                    from[nodeFound] = -1;
-                    marked[nodeFound] = true; // pobarvaj ga
+                    //from[nodeFound] = -1;
+                    //marked[nodeFound] = true; // pobarvaj ga
                     stack.push(nodeFound);
+                    //continue;
                     curNode = stack.peek();
                 } else {
                     // go to Exit,
                     // DRAW path to exit
-                    System.out.println("\n Pot do izhoda: \n" + pathToExit.toString() + "\n");
+                    //System.out.println("\nPot do izhoda: \n" + pathToExit.toString() + "\n");
+                    marked[fn] = false;
                     while (!pathToExit.isEmpty()) {
                         curNode = pathToExit.pop();
                         draw(marked, curNode);
                     }
+
+                    // Calculate number of moves
+//                    int move = 0;
+//                    for (Integer node : path)
+//                        move += moves.get(node);
+
+                    //System.out.println("\nŠtevilo premikov na najdeni poti: " + move);
+
+                    System.out.println(moves);
+
+                    // Draw final path
+                    marked = new boolean[graph.length];
+                    for (Integer node : path) {
+                        marked[node] = true;
+                    }
+                    draw(marked, fn);
+
                     return;
                 }
             }
@@ -76,10 +103,10 @@ public class DFS {
                     stack.push(nextNode);
                     //System.out.println("Polagam na sklad vozlisce " + nextNode);
                     found = true;
-
                     break;
                 }
             }
+
             if (naselExit) {
                 pathToExit.push(curNode);
             }
@@ -130,6 +157,10 @@ public class DFS {
 
         StdDraw.show();
         StdDraw.pause(LabyrinthDrawer.speed);
+    }
+
+    public static void printStats() {
+        System.out.println("Največja preiskana globina: " + maxDepth);
     }
 
 }
