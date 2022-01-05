@@ -5,7 +5,6 @@ import java.util.LinkedList;
 public class AStar {
 
     public static StringBuffer pot = new StringBuffer();
-    private static int[] fScore;
 
     public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int[] hCost) {
         LinkedList<Integer> open = new LinkedList<>();
@@ -13,7 +12,7 @@ public class AStar {
         int[] from = new int[graph.length];
 
         int[] gScore = new int[graph.length];
-        fScore = new int[graph.length];
+        int[] fScore = new int[graph.length];
 
         for (int i = 0; i < gScore.length; i++) {
             gScore[i] = Integer.MAX_VALUE;
@@ -50,25 +49,29 @@ public class AStar {
             if (endNodes.contains(curNode)) {
                 //System.out.println("\nResitev A* v vozliscu " + curNode);
                 //System.out.print("Pot: " + curNode);
+                int nodeFound = curNode;
 
                 endNodes.remove((Integer) curNode);
 
                 StringBuffer sb = new StringBuffer();
-                sb.append(" <-- " + curNode);
+
+                if (endNodes.isEmpty()) {
+                    sb.append(curNode);
+                }
 
                 while (true) {
                     curNode = from[curNode];
                     if (curNode != -1) {
-                        //System.out.print(" <-- " + curNode);
-                        if (pot.indexOf(curNode + "") == -1) sb.append(" <-- " + curNode);
+                        sb.append(" <-- " + curNode);
                     } else
                         break;
                 }
+
                 pot.insert(0, sb);
 
-                if (endNodes.size() > 0) continue;
+                if (endNodes.isEmpty()) return;
 
-                draw(closed, curNode);
+                search(graph, nodeFound, endNodes, hCost);
 
                 return;
             }
@@ -145,7 +148,7 @@ public class AStar {
     }
 
     public static void drawPath(int graphLen) {
-        String[] arr = pot.substring(5).split(" <-- ");
+        String[] arr = pot.toString().split(" <-- ");
         boolean[] marked = new boolean[graphLen];
         for (int i = 0; i < arr.length; i++) {
             int num = Integer.parseInt(arr[i]);
@@ -154,17 +157,15 @@ public class AStar {
         }
     }
 
-    public static void printStats(ArrayList<Integer> endnodes) {
-        String[] arr = pot.substring(5).split(" <-- ");
+    public static void printStats(int[] costs) {
+        int cost = 0;
+        String[] arr = pot.toString().split(" <-- ");
         System.out.println("Pot do cilja:");
         for (int i = arr.length - 1; i >= 0; i--) {
             int node = Integer.parseInt(arr[i]);
             System.out.print(getPosition(node) + " ");
+            cost += costs[node];
         }
-
-        int cost = 0;
-        for (Integer endnode : endnodes)
-            cost += fScore[endnode] - 1;
 
         System.out.println("\nŠtevilo premikov na najdeni poti: " + arr.length);
         System.out.println("Cena najdene poti: " + cost);

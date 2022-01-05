@@ -1,7 +1,10 @@
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class IDAStar {
+
+    public StringBuffer pot = new StringBuffer();
 
     int[][] searchGraph;
     ArrayList<Integer> searchEndNodes;
@@ -13,14 +16,16 @@ public class IDAStar {
     private int search(int gScore, int bound) {
         int curNode = path.get(0);
 
+        draw(path, curNode);
+
         int fScore = gScore + searchHeurCost[curNode];
 
         if (fScore > bound) {
-            System.out.println("Vozlisce " + curNode + " je zunaj trenutne meje (razdalja " + fScore + ")");
+            //System.out.println("Vozlisce " + curNode + " je zunaj trenutne meje (razdalja " + fScore + ")");
             return fScore;
         }
 
-        System.out.println("Vozlisce " + curNode + " je znotraj trenutne meje");
+        //System.out.println("Vozlisce " + curNode + " je znotraj trenutne meje");
 
         if (searchEndNodes.contains(curNode)) {
             found = true;
@@ -61,24 +66,43 @@ public class IDAStar {
         int bound = searchHeurCost[startNode];
 
         while (true) {
-            System.out.println("Meja iskanja je nastavljena na " + bound);
+            //System.out.println("Meja iskanja je nastavljena na " + bound);
 
             int res = search(0, bound);
 
             if (found) {
-                System.out.println("Resitev IDA* je v vozliscu: " + path.get(0));
-                System.out.println("Najdena resitev je na razdalji: " + res);
-                System.out.print("Najdena pot: ");
-                for (int i = 0; i < path.size(); i++) {
-                    if (i > 0)
-                        System.out.print(" <-- ");
-                    System.out.print(path.get(i));
+                //System.out.println("Resitev IDA* je v vozliscu: " + path.get(0));
+                //System.out.println("Najdena resitev je na razdalji: " + res);
+
+                int nodeFound = path.getFirst();
+
+                endNodes.remove((Integer) nodeFound);
+
+                //System.out.print("Najdena pot: ");
+
+                StringBuffer sb = new StringBuffer();
+
+                if (endNodes.isEmpty()) {
+                    sb.append(nodeFound);
                 }
+
+                for (int i = 0; i < path.size(); i++) {
+                    //if (i > 0)
+                    //sb.append(" <-- ");
+                    sb.append(" <-- " + path.get(i));
+                }
+
+                pot.insert(0, sb);
+
+                if (endNodes.isEmpty()) return;
+
+                find(graph, nodeFound, endNodes, hCost);
+
                 break;
             }
 
             if (res == Integer.MAX_VALUE) {
-                System.out.println("Iz zacetnega vozlisca ni mozno priti do nobenega ciljnega vozlisca!");
+                //System.out.println("Iz zacetnega vozlisca ni mozno priti do nobenega ciljnega vozlisca!");
                 break;
             }
 
@@ -87,32 +111,73 @@ public class IDAStar {
         }
     }
 
-    public static void main(String[] args) {
-        int[][] graph = {
-                {0, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 2, 8, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 5, 2, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 2, 0},
-                {0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+    private void draw(LinkedList<Integer> path, int curNode) {
+        int[][] labyrinth = LabyrinthDrawer.labyrinth;
 
-        int startNode = 0;
-        ArrayList<Integer> endNodes = new ArrayList<>();
-        endNodes.add(7);
-        endNodes.add(11);
-        endNodes.add(12);
+        StdDraw.enableDoubleBuffering();
+        StdDraw.clear();
 
-        int[] hCost = {6, 5, 8, 4, 10, 2, 8, 0, 1, 12, 12, 0, 0};
+        // Draw labyrinth
+        for (int y = 0; y < labyrinth.length; y++) {
+            for (int x = 0; x < labyrinth.length; x++) {
+                StdDraw.setPenColor(LabyrinthDrawer.getColor(labyrinth[x][y]));
+                StdDraw.filledSquare(y + 0.5, x + 0.5, 0.5);
+            }
+        }
 
-        IDAStar idas = new IDAStar();
-        idas.find(graph, startNode, endNodes, hCost);
+        // Draw path
+        StdDraw.setPenColor(Color.ORANGE);
+        for (int i = 0; i < path.size(); i++) {
+            int node = path.get(i);
+            int curY = node % labyrinth.length;
+            int curX = node / labyrinth.length;
+            StdDraw.filledSquare(curY + 0.5, curX + 0.5, 0.5);
+        }
+
+        // Draw current position
+        StdDraw.setPenColor(Color.MAGENTA);
+        int curY = curNode % labyrinth.length;
+        int curX = curNode / labyrinth.length;
+        StdDraw.filledSquare(curY + 0.5, curX + 0.5, 0.5);
+
+        // Draw grid
+        StdDraw.setPenColor(Color.LIGHT_GRAY);
+        for (int x = 1; x < labyrinth.length; x++) {
+            StdDraw.line(x, 0, x, labyrinth.length);
+            StdDraw.line(0, x, labyrinth.length, x);
+        }
+
+        // Draw cost
+        // Draw labyrinth
+        for (int y = 0; y < labyrinth.length; y++) {
+            for (int x = 0; x < labyrinth.length; x++) {
+                StdDraw.setPenColor(Color.BLACK);
+                if (labyrinth[x][y] > 0)
+                    StdDraw.text(y + 0.5, x + 0.5, String.valueOf(labyrinth[x][y]));
+            }
+        }
+
+        StdDraw.show();
+        StdDraw.pause(LabyrinthDrawer.speed);
     }
 
+    public void printStats(int[] costs) {
+        int cost = 0;
+        String[] arr = pot.toString().split(" <-- ");
+        System.out.println("Pot do cilja:");
+        for (int i = arr.length - 1; i >= 0; i--) {
+            int node = Integer.parseInt(arr[i]);
+            System.out.print(getPosition(node) + " ");
+            cost += costs[node];
+        }
+
+        System.out.println("\nŠtevilo premikov na najdeni poti: " + arr.length);
+        System.out.println("Cena najdene poti: " + cost);
+    }
+
+    private String getPosition(int curNode) {
+        int curY = curNode % LabyrinthDrawer.labyrinth.length;
+        int curX = curNode / LabyrinthDrawer.labyrinth.length;
+        return "(" + curX + ", " + curY + ")";
+    }
 }

@@ -2,7 +2,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String labyrinth = "labyrinth_6.txt";
+        String labyrinth = "labyrinth_5.txt";
 
         LabyrinthDrawer lb = new LabyrinthDrawer(labyrinth);
 
@@ -11,8 +11,9 @@ public class Main {
 
         //lb.DFS();
         //lb.BFS();
-        lb.AStar();
+        //lb.AStar();
         //lb.IDDFS();
+        lb.IDAStar();
     }
 
 }
