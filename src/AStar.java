@@ -1,12 +1,14 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 public class AStar {
 
     public static StringBuffer pot = new StringBuffer();
 
-    public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int[] hCost) {
+    public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int[] hCost, int fn) {
         LinkedList<Integer> open = new LinkedList<>();
         boolean[] closed = new boolean[graph.length];
         int[] from = new int[graph.length];
@@ -46,7 +48,7 @@ public class AStar {
             closed[curNode] = true;
             //System.out.println("Zapiram vozlisce " + curNode);
 
-            if (endNodes.contains(curNode)) {
+            if (endNodes.contains(curNode) && (curNode != fn || endNodes.size() == 1)) {
                 //System.out.println("\nResitev A* v vozliscu " + curNode);
                 //System.out.print("Pot: " + curNode);
                 int nodeFound = curNode;
@@ -71,7 +73,7 @@ public class AStar {
 
                 if (endNodes.isEmpty()) return;
 
-                search(graph, nodeFound, endNodes, hCost);
+                search(graph, nodeFound, endNodes, hCost, fn);
 
                 return;
             }
@@ -158,13 +160,18 @@ public class AStar {
     }
 
     public static void printStats(int[] costs) {
-        int cost = 0;
         String[] arr = pot.toString().split(" <-- ");
         System.out.println("Pot do cilja:");
+        int cost = 0;
+        Set<Integer> marked = new HashSet<>();
         for (int i = arr.length - 1; i >= 0; i--) {
             int node = Integer.parseInt(arr[i]);
             System.out.print(getPosition(node) + " ");
-            cost += costs[node];
+
+            if (!marked.contains(node)) {
+                marked.add(node);
+                cost += costs[node];
+            }
         }
 
         System.out.println("\nŠtevilo premikov na najdeni poti: " + arr.length);

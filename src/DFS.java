@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class DFS {
@@ -59,7 +58,7 @@ public class DFS {
                     if (depth > maxDepth) maxDepth = depth;
                 }
                 System.out.println(sb.toString());
-                if (prev.isEmpty()) {
+                if (prev.length() == 0) {
                     pot.append(" <-- " + sb);
                     prev.append(sb);
                 } else {

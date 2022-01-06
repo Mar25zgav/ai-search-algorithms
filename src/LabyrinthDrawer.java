@@ -28,7 +28,7 @@ public class LabyrinthDrawer {
     }
 
     public void AStar() {
-        AStar.search(convertToGraph(labyrinth), startNode, endNodes, getCosts(labyrinth));
+        AStar.search(convertToGraph(labyrinth), startNode, endNodes, getCosts(labyrinth), finalNode);
         AStar.drawPath(convertToGraph(labyrinth).length);
         AStar.printStats(getCosts(labyrinth));
     }
@@ -42,7 +42,7 @@ public class LabyrinthDrawer {
     public void BFS() {
         BFS.search(convertToGraph(labyrinth), startNode, endNodes, finalNode);
         BFS.drawPath(convertToGraph(labyrinth).length);
-        BFS.printStats();
+        BFS.printStats(getCosts(labyrinth));
     }
 
     public void IDDFS() {
@@ -52,7 +52,9 @@ public class LabyrinthDrawer {
 
     public void IDAStar() {
         IDAStar idas = new IDAStar();
+        idas.fn = finalNode;
         idas.find(convertToGraph(labyrinth), startNode, endNodes, getCosts(labyrinth));
+        idas.drawPath(convertToGraph(labyrinth).length);
         idas.printStats(getCosts(labyrinth));
     }
 
