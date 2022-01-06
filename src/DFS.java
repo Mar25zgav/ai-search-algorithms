@@ -1,9 +1,12 @@
 import java.awt.*;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class DFS {
 
     private static int maxDepth;
+    public static StringBuffer pot = new StringBuffer();
+    public static StringBuffer prev = new StringBuffer();
 
     public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int fn) {
         boolean[] marked = new boolean[graph.length];
@@ -37,21 +40,31 @@ public class DFS {
                 endNodes.remove((Integer) curNode);
 
                 //System.out.println("\nResitev DFS v vozliscu " + curNode);
-                System.out.print("\nPot: " + curNode);
+                System.out.print("\nPot: ");
                 path.add(curNode);
                 int depth = 0;
+
+                StringBuffer sb = new StringBuffer();
+                sb.append(curNode);
 
                 while (true) {
                     curNode = from[curNode];
                     if (curNode != -1) {
-                        System.out.print(" <-- " + curNode);
+                        sb.append(" <-- " + curNode);
                         path.add(curNode);
                         depth++;
                     } else {
                         break;
                     }
-
                     if (depth > maxDepth) maxDepth = depth;
+                }
+                System.out.println(sb.toString());
+                if (prev.isEmpty()) {
+                    pot.append(" <-- " + sb);
+                    prev.append(sb);
+                } else {
+                    pot.insert(0, constructPot(sb));
+                    prev = new StringBuffer(sb);
                 }
 
                 // If found all endNodes end else continue
@@ -66,19 +79,14 @@ public class DFS {
                     // DRAW path to exit
                     //System.out.println("\nPot do izhoda: \n" + pathToExit.toString() + "\n");
                     marked[fn] = false;
+                    pot.insert(0, izhodPot(pathToExit));
                     while (!pathToExit.isEmpty()) {
                         curNode = pathToExit.pop();
+                        sb.insert(0, " <-- " + curNode);
                         draw(marked, curNode);
                     }
 
-                    // Calculate number of moves
-//                    int move = 0;
-//                    for (Integer node : path)
-//                        move += moves.get(node);
-
-                    //System.out.println("\nŠtevilo premikov na najdeni poti: " + move);
-
-                    System.out.println(moves);
+                    System.out.println();
 
                     // Draw final path
                     marked = new boolean[graph.length];
@@ -86,7 +94,6 @@ public class DFS {
                         marked[node] = true;
                     }
                     draw(marked, fn);
-
                     return;
                 }
             }
@@ -116,6 +123,45 @@ public class DFS {
                 //System.out.println("Odstranjum s sklada vozlisce " + curNode);
             }
         }
+    }
+
+    private static String constructPot(StringBuffer sb) {
+        StringBuffer rez = new StringBuffer();
+        String[] arr1 = sb.toString().split(" <-- ");
+        String[] arr2 = prev.toString().split(" <-- ");
+        int k = arr1.length - 1;
+        int j = arr2.length - 1;
+        while (k >= 0 && j >= 0) {
+            if (arr1[k].equals(arr2[j])) {
+                k--;
+                j--;
+                continue;
+            } else {
+                break;
+            }
+        }
+        for (int i = 1; i <= j; i++) {
+            rez.insert(0, " <-- " + arr2[i]);
+        }
+        for (int i = k; i >= 0; i--) { // maybe index prob
+            rez.insert(0, " <-- " + arr1[i]);
+        }
+        return rez.toString();
+    }
+
+    static String[] reverse(String a[])
+    {
+        Collections.reverse(Arrays.asList(a));
+        return a;
+    }
+
+    private static String izhodPot(Stack s) {
+        StringBuffer r = new StringBuffer();
+
+        while (s.size() > 0) {
+            r.insert(0, " <-- " + s.pop());
+        }
+        return r.toString();
     }
 
     private static void draw(boolean[] path, int curNode) {
