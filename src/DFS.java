@@ -6,6 +6,7 @@ public class DFS {
     private static int maxDepth;
     public static StringBuffer pot = new StringBuffer();
     public static StringBuffer prev = new StringBuffer();
+    private static int cena = 1;
 
     public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int fn) {
         boolean[] marked = new boolean[graph.length];
@@ -22,12 +23,11 @@ public class DFS {
 
         boolean naselExit = false;
 
-        //System.out.println("Polagam na sklad vozlisce " + startNode);
-
         while (!stack.isEmpty()) {
             int curNode = stack.peek();
 
             draw(marked, curNode);
+            cena++;
 
             if (endNodes.contains(curNode)) {
                 int nodeFound = curNode;
@@ -39,7 +39,7 @@ public class DFS {
                 endNodes.remove((Integer) curNode);
 
                 //System.out.println("\nResitev DFS v vozliscu " + curNode);
-                System.out.print("\nPot: ");
+                //System.out.print("\nPot: ");
                 path.add(curNode);
                 int depth = 0;
 
@@ -57,7 +57,6 @@ public class DFS {
                     }
                     if (depth > maxDepth) maxDepth = depth;
                 }
-                System.out.println(sb.toString());
                 if (prev.length() == 0) {
                     pot.append(" <-- " + sb);
                     prev.append(sb);
@@ -76,7 +75,6 @@ public class DFS {
                 } else {
                     // go to Exit,
                     // DRAW path to exit
-                    //System.out.println("\nPot do izhoda: \n" + pathToExit.toString() + "\n");
                     marked[fn] = false;
                     pot.insert(0, izhodPot(pathToExit));
                     while (!pathToExit.isEmpty()) {
@@ -84,8 +82,6 @@ public class DFS {
                         sb.insert(0, " <-- " + curNode);
                         draw(marked, curNode);
                     }
-
-                    System.out.println();
 
                     // Draw final path
                     marked = new boolean[graph.length];
@@ -107,7 +103,7 @@ public class DFS {
                     marked[nextNode] = true; // pobarvaj ga
                     from[nextNode] = curNode;
                     stack.push(nextNode);
-                    //System.out.println("Polagam na sklad vozlisce " + nextNode);
+                    //cena++;
                     found = true;
                     break;
                 }
@@ -119,7 +115,7 @@ public class DFS {
 
             if (!found) {
                 stack.pop();
-                //System.out.println("Odstranjum s sklada vozlisce " + curNode);
+
             }
         }
     }
@@ -206,6 +202,34 @@ public class DFS {
 
     public static void printStats() {
         System.out.println("Največja preiskana globina: " + maxDepth);
+
+
+        // izpis poti
+        System.out.print("Pot: ");
+        String[] arr = pot.toString().split(" <-- ");
+        ArrayList<String> list = new ArrayList<>(Arrays.asList(arr));
+        int len = arr.length;
+        for (int i = 0; i < len - 1; i++) {
+            if (list.get(i).equals("")) {
+                list.remove(i--);
+                len--;
+                continue;
+            }
+            String a = list.get(i);
+            String b = list.get(i+1);
+            if (a.equals(b)) {
+                list.remove(i+1);
+                len--;
+            }
+            System.out.print(list.get(i) + " <-- ");
+        }
+        System.out.println();
+        System.out.println("Dolzina poti: " + len);
+        System.out.println("Cena iskanja: " + cena);
+
+
+
     }
+
 
 }

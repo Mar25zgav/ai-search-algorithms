@@ -36,7 +36,6 @@ public class LabyrinthDrawer {
     public void DFS() {
         DFS.search(convertToGraph(labyrinth), startNode, endNodes, finalNode);
         DFS.printStats();
-        System.out.println(DFS.pot.toString());
     }
 
     public void BFS() {
