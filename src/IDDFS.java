@@ -125,6 +125,6 @@ public class IDDFS {
     }
 
     public static void printStats() {
-        System.out.println("Največja preiskana globina: " + maxDepth);
+        System.out.println("\nNajvečja preiskana globina: " + maxDepth);
     }
 }

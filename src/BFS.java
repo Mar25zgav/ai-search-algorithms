@@ -6,6 +6,7 @@ import java.util.Queue;
 public class BFS {
 
     public static StringBuffer pot = new StringBuffer();
+    public static int maxBreadth = 0;
 
     public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int fn) {
         boolean[] marked = new boolean[graph.length];
@@ -20,6 +21,9 @@ public class BFS {
         //System.out.println("Dajem v vrsto vozlisce " + startNode);
 
         while (!queue.isEmpty()) {
+            if (queue.size() > maxBreadth) {
+                maxBreadth = queue.size();
+            }
             int curNode = queue.remove();
             draw(marked, curNode);
 
@@ -131,8 +135,8 @@ public class BFS {
             System.out.print(getPosition(node) + " ");
             cost += costs[node];
         }
-
-        System.out.println("\nŠtevilo premikov na najdeni poti: " + arr.length);
+        System.out.println("\nNajvečja globina: " + maxBreadth);
+        System.out.println("Število premikov na najdeni poti: " + arr.length);
         System.out.println("Cena najdene poti: " + cost);
     }
 

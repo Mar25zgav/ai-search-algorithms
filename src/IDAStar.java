@@ -6,10 +6,14 @@ public class IDAStar {
 
     public StringBuffer pot = new StringBuffer();
 
+    private static int max = 0;
+
     int[][] searchGraph;
     ArrayList<Integer> searchEndNodes;
     int[] searchHeurCost;
     int fn;
+
+    public static int maxD = 0;
 
     LinkedList<Integer> path;
     boolean found;
@@ -68,6 +72,9 @@ public class IDAStar {
 
         while (true) {
             //System.out.println("Meja iskanja je nastavljena na " + bound);
+            if (bound > max) {
+                max = bound;
+            }
 
             int res = search(0, bound);
 
@@ -235,6 +242,7 @@ public class IDAStar {
 
         System.out.println("\nŠtevilo premikov na najdeni poti: " + arr.length);
         System.out.println("Cena najdene poti: " + cost);
+        System.out.println(" Max bound: " + max);
     }
 
     private String getPosition(int curNode) {

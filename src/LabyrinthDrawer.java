@@ -22,7 +22,7 @@ public class LabyrinthDrawer {
         StdDraw.setXscale(0, labyrinth.length);
         StdDraw.setYscale(labyrinth.length, 0);
 
-        speed = 100;
+        speed = 0;
 
         initializeNodes();
     }

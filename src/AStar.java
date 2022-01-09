@@ -5,6 +5,7 @@ import java.util.LinkedList;
 public class AStar {
 
     public static StringBuffer pot = new StringBuffer();
+    public static int max = 0;
 
     public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int[] hCost, int fn) {
         LinkedList<Integer> open = new LinkedList<>();
