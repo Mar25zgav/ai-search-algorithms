@@ -6,7 +6,6 @@ public class DFS {
     private static int maxDepth;
     public static StringBuffer pot = new StringBuffer();
     public static StringBuffer prev = new StringBuffer();
-    private static int cena = 1;
 
     public static void search(int[][] graph, int startNode, ArrayList<Integer> endNodes, int fn) {
         boolean[] marked = new boolean[graph.length];
@@ -27,7 +26,6 @@ public class DFS {
             int curNode = stack.peek();
 
             draw(marked, curNode);
-            cena++;
 
             if (endNodes.contains(curNode)) {
                 int nodeFound = curNode;
@@ -103,7 +101,6 @@ public class DFS {
                     marked[nextNode] = true; // pobarvaj ga
                     from[nextNode] = curNode;
                     stack.push(nextNode);
-                    //cena++;
                     found = true;
                     break;
                 }
@@ -200,12 +197,11 @@ public class DFS {
         StdDraw.pause(LabyrinthDrawer.speed);
     }
 
-    public static void printStats() {
+    public static void printStats(int[][] lab) {
         System.out.println("Največja preiskana globina: " + maxDepth);
 
-
         // izpis poti
-        System.out.print("Pot: ");
+        //System.out.print("Pot: ");
         String[] arr = pot.toString().split(" <-- ");
         ArrayList<String> list = new ArrayList<>(Arrays.asList(arr));
         int len = arr.length;
@@ -221,14 +217,33 @@ public class DFS {
                 list.remove(i+1);
                 len--;
             }
-            System.out.print(list.get(i) + " <-- ");
+            //System.out.print(list.get(i) + " <-- ");
+        }
+        System.out.println("Število premikov na najdeni poti: " + len);
+        int cena = 0;
+        for (int i = 0; i < list.size(); i++) {
+            int polje = Integer.parseInt(list.get(i));
+            int j = polje / lab.length;
+            int k = polje % lab.length;
+            if (lab[j][k] > 0) {
+                cena += lab[j][k];
+            }
+        }
+        System.out.println("Cena najdene poti: " + cena);
+        for (int i = list.size()-1; i >= 0; i--) {
+            int polje = Integer.parseInt(list.get(i));
+            System.out.print(getPosition(polje));
         }
         System.out.println();
-        System.out.println("Dolzina poti: " + len);
-        System.out.println("Cena iskanja: " + cena);
 
 
 
+    }
+
+    private static String getPosition(int curNode) {
+        int curY = curNode % LabyrinthDrawer.labyrinth.length;
+        int curX = curNode / LabyrinthDrawer.labyrinth.length;
+        return "(" + curX + ", " + curY + ")";
     }
 
 
