@@ -1,8 +1,6 @@
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 
 public class IDAStar {
 
@@ -229,15 +227,10 @@ public class IDAStar {
         String[] arr = pot.toString().split(" <-- ");
         System.out.println("Pot do cilja:");
         int cost = 0;
-        Set<Integer> marked = new HashSet<>();
         for (int i = arr.length - 1; i >= 0; i--) {
             int node = Integer.parseInt(arr[i]);
             System.out.print(getPosition(node) + " ");
-
-            if (!marked.contains(node)) {
-                marked.add(node);
-                cost += costs[node];
-            }
+            cost += costs[node];
         }
 
         System.out.println("\nŠtevilo premikov na najdeni poti: " + arr.length);

@@ -1,6 +1,7 @@
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Queue;
-import java.util.*;
 
 public class BFS {
 
@@ -125,15 +126,10 @@ public class BFS {
         String[] arr = pot.toString().split(" <-- ");
         System.out.println("Pot do cilja:");
         int cost = 0;
-        Set<Integer> marked = new HashSet<>();
         for (int i = arr.length - 1; i >= 0; i--) {
             int node = Integer.parseInt(arr[i]);
             System.out.print(getPosition(node) + " ");
-
-            if (!marked.contains(node)) {
-                marked.add(node);
-                cost += costs[node];
-            }
+            cost += costs[node];
         }
 
         System.out.println("\nŠtevilo premikov na najdeni poti: " + arr.length);
